@@ -6,12 +6,12 @@ import { FiPower } from "react-icons/fi";
 import Logo from "../../assets/Logo.jpg"
 function Navbar({ user }) {
     return (
-        <nav className="col-span-3 flex justify-between items-center border px-3">
+        <nav className="col-span-3 flex justify-between items-center border-b px-3">
             {/* Brand Name */}
             <div className="grid grid-rows-2 grid-flow-col gap-x-2">
                 <img src={Logo} alt="Logo Cashier" width={50} className="rounded-full row-span-2" />
                 <h1 className="font-semibold text-2xl col-span-1">My <span className="text-primary">Cashier</span></h1>
-                <span className="row-span-1 col-span-1 text-sm text-gray-600 tracking-wide">{user.name}</span>
+                <span className="row-span-1 col-span-1 text-sm text-gray-600 tracking-wide">{user.role} : {user.name}</span>
             
             </div>
             <Input

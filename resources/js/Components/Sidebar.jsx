@@ -35,6 +35,7 @@ function Sidebar() {
                     );
                 })}
             </ScrollArea>
+            <p className="text-center text-xs text-gray-500">{new Date().toLocaleDateString("id",{day:"numeric",month:"long",year:"numeric"})}</p>
         </div>
     );
 }
