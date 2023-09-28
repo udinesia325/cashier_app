@@ -11,7 +11,7 @@ import {
 
 function Sidebar() {
     return (
-        <div className="col-span-1 pt-2 px-2">
+        <div className="col-span-1 pt-2 px-4">
             <ScrollArea className="h-[95%] w-[100%] mt-5 flex flex-col">
                 <Accordion  type="single" collapsible>
                     {adminSidebarData.map((data, index) => {

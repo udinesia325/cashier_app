@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('order_items', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger("product_id")->nullable(false);
+            $table->uuid("product_id")->nullable(false);
             $table->unsignedBigInteger("order_id")->nullable(false);
             $table->integer("quantity")->nullable(false);
             $table->integer("subtotal")->nullable(false);

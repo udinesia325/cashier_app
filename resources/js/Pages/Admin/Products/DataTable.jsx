@@ -1,3 +1,4 @@
+import React from "react";
 import { Button } from "@/shadcn/ui/button";
 import { useState } from "react";
 
@@ -25,7 +26,7 @@ import {
 } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 
-function Index({ data }) {
+function DataTable({data}) {
     const [sorting, setSorting] = useState([]);
     const columns = [
         {
@@ -34,6 +35,13 @@ function Index({ data }) {
             cell: ({ row }) => {
                 return row.index + 1;
             },
+        },
+        {
+            accessorKey: "image",
+            header: "Gambar",
+            cell: ({row}) => {
+                return <img className="w-[80px] rounded-lg" src={`/${row.getValue('image')}`} alt="gambar" />
+            }
         },
         {
             accessorKey: "name",
@@ -45,7 +53,7 @@ function Index({ data }) {
                             column.toggleSorting(column.getIsSorted() === "asc")
                         }
                     >
-                        Name
+                        Nama
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                     </Button>
                 );
@@ -54,14 +62,18 @@ function Index({ data }) {
                 <div className="lowercase">{row.getValue("name")}</div>
             ),
         },
+
         {
-            accessorKey: "email",
-            header: "Email",
+            accessorKey: "price",
+            header: "Harga",
+            cell:({row}) => {
+                return <span>Rp. {row.getValue('price').toLocaleString("id")}</span>
+            }
         },
 
         {
             id: "actions",
-            header: "actions",
+            header: "Aksi",
             cell: ({ row }) => {
                 const payment = row.original;
 
@@ -74,7 +86,7 @@ function Index({ data }) {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuLabel>Aksi</DropdownMenuLabel>
                             <DropdownMenuItem
                                 onClick={() =>
                                     navigator.clipboard.writeText(payment.id)
@@ -82,14 +94,13 @@ function Index({ data }) {
                             >
                                 Edit
                             </DropdownMenuItem>
-                            <DropdownMenuItem>Delete</DropdownMenuItem>
+                            <DropdownMenuItem>Hapus</DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 );
             },
         },
     ];
-
     const table = useReactTable({
         data,
         columns,
@@ -101,9 +112,8 @@ function Index({ data }) {
             sorting,
         },
     });
-    return (
-        <>
-            <Table className="bg-white m-3 max-w-[700px]">
+    return <div>
+        <Table className="bg-white m-3 max-w-[900px]">
                 <TableHeader>
                     {table.getHeaderGroups().map((headerGroup) => (
                         <TableRow key={headerGroup.id}>
@@ -152,26 +162,7 @@ function Index({ data }) {
                     )}
                 </TableBody>
             </Table>
-            <div className="flex items-center justify-start space-x-2 py-4 pl-2">
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => table.previousPage()}
-                    disabled={!table.getCanPreviousPage()}
-                >
-                    Previous
-                </Button>
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => table.nextPage()}
-                    disabled={!table.getCanNextPage()}
-                >
-                    Next
-                </Button>
-            </div>
-        </>
-    );
+    </div>;
 }
 
-export default Index;
+export default DataTable;

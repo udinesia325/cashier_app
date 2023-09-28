@@ -3,10 +3,10 @@ import InputLabel from "@/Components/InputLabel";
 import PrimaryButton from "@/Components/PrimaryButton";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { Input } from "@/shadcn/ui/input";
-import { useForm } from "@inertiajs/react";
+import { Head, useForm } from "@inertiajs/react";
 import { useEffect } from "react";
 
-function AddUser({auth}) {
+function AddUser({ auth }) {
     const { data, setData, post, processing, errors, reset } = useForm({
         name: "",
         email: "",
@@ -27,8 +27,10 @@ function AddUser({auth}) {
 
     return (
         <Authenticated user={auth.user}>
-            <div className="w-96 bg-white ml-10 mt-10 p-10 rounded">
-                <form onSubmit={submit}>
+            <Head title="Add User" />
+
+            <div className="ml-10  p-10 rounded">
+                <form onSubmit={submit} className="max-w-[700px]">
                     <div>
                         <InputLabel htmlFor="name" value="Name" />
 

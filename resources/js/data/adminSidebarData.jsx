@@ -35,7 +35,7 @@ const adminSidebarData = [
             {
                 icon:<GiShop className="text-lg" />,
                 name:"Semua Produk",
-                href: route("dashboard")
+                href: route("products")
             },
             {
                 icon:<CiShoppingTag className="text-lg" />,

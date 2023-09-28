@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -39,6 +40,11 @@ Route::middleware('auth')->prefix("admin")->group(function () {
 
     Route::get("/user",[UserController::class,"index"])->name("admin.user");
     Route::get("/add",[UserController::class,"add"])->name("admin.user.add");
+
+    // 
+    Route::middleware("role:admin")->group(function(){
+        Route::get("/products",[ProductController::class,"index"])->name("products");
+    });
 });
 
 require __DIR__.'/auth.php';

@@ -1,12 +1,14 @@
-import Authenticated from '@/Layouts/AuthenticatedLayout'
-import React from 'react'
+import Authenticated from "@/Layouts/AuthenticatedLayout";
+import { Head } from "@inertiajs/react";
+import React from "react";
 
-function Dashboard({auth}) {
-  return (
-    <Authenticated user={auth.user}>
-        ini dashboard admin
-    </Authenticated>
-  )
+function Dashboard({ auth }) {
+    return (
+        <Authenticated user={auth.user}>
+            <Head title="Dahsboard" />
+            ini dashboard admin
+        </Authenticated>
+    );
 }
 
-export default Dashboard
+export default Dashboard;

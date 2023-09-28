@@ -12,9 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('products', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('name')->nullable(false);
             $table->integer('price')->nullable(false);
+            $table->string('image')->nullable();
             $table->unsignedBigInteger("type_id")->nullable(false);
             $table->unsignedBigInteger("category_id")->nullable(false);
             $table->timestamps();
