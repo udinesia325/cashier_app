@@ -13,11 +13,9 @@ export default function Authenticated({ user, header, children }) {
                 <NavbarAdmin user={user} />
                 <SidebarAdmin />
                 <div className="col-span-3 bg-gray-200 p-5">
-                    <ScrollArea className="h-[80vh] w-[100%] mt-5 py-2 flex flex-col">
-                        <div className=" rounded bg-white p-5">
-                            {children}
-                        </div>
-                    </ScrollArea>
+                    <div className="h-[85vh] w-[100%] min-w-[400px] min-h-[300px] mt-5 rounded bg-white p-5">
+                        {children}
+                    </div>
                 </div>
                 <Toaster />
             </div>
