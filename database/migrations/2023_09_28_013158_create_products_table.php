@@ -19,6 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger("type_id")->nullable(false);
             $table->unsignedBigInteger("category_id")->nullable(false);
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign("type_id")->on("types")->references("id");
             $table->foreign("category_id")->on("categories")->references("id");

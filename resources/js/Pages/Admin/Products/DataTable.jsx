@@ -70,6 +70,20 @@ function DataTable({data}) {
                 return <span>Rp. {row.getValue('price').toLocaleString("id")}</span>
             }
         },
+        {
+            accessorKey: "type",
+            header: "Tipe",
+            cell:({row}) => {
+                return <span>{row.getValue("type").name}</span>
+            }
+        },
+        {
+            accessorKey: "category",
+            header: "Kategori",
+            cell:({row}) => {
+                return <span>{row.getValue("category").name}</span>
+            }
+        },
 
         {
             id: "actions",

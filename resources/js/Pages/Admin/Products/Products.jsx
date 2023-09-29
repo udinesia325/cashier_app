@@ -21,6 +21,7 @@ function Products({ auth, data, flash }) {
             });
         }
     }, []);
+    console.log(data);
     return (
         <Authenticated user={auth.user}>
             <h1 className=" mb-5 text-3xl text-slate-800 pl-2 font-semibold">

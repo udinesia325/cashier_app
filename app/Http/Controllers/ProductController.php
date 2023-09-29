@@ -24,7 +24,7 @@ class ProductController extends Controller
     {
         $page = $request->input("page") ?? $this->page;
         $search = $request->input("search") ?? $this->search;
-        $products = Product::query()->where(function (Builder $builder) use ($search) {
+        $products = Product::query()->with(["category","type"])->where(function (Builder $builder) use ($search) {
             $builder->where('name', 'like', "%$search%");
             $builder->orWhere('price', 'like', "%$search%");
         });
