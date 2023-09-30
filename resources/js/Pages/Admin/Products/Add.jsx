@@ -35,7 +35,6 @@ function Add(props) {
         setData("image", image);
         setFile(image);
     };
-    console.log(errors);
     return (
         <Authenticated user={auth.user}>
             <h1 className="text-3xl font-semibold text-gray-900 mb-10">
@@ -116,10 +115,15 @@ function Add(props) {
                     ) : null}
                 </div>
                 <div className="flex gap-2">
-                    <Button disabled={processing}>Kirim</Button>
-                    <Button variant="destructive" onClick={() => reset()}>
-                        Reset
+                    <Button disabled={processing} type="submit">
+                        {" "}
+                        {processing ? "Memuat" : "Kirim"}
                     </Button>
+
+                    {/* agar tidak tereset saat submit */}
+                    <p className="py-2 px-4 bg-red-500 hover:bg-red-400 text-white cursor-pointer rounded-md" onClick={() => reset()}>
+                        Reset
+                    </p>
                     <Link
                         href={route("products")}
                         className="bg-blue-500 py-2 px-6 text-white font-semibold rounded-md"

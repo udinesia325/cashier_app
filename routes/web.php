@@ -46,6 +46,9 @@ Route::middleware('auth')->prefix("admin")->group(function () {
         Route::get("/products",[ProductController::class,"index"])->name("products");
         Route::get("/products/add",[ProductController::class,"add"])->name("products.add");
         Route::post("/products/store",[ProductController::class,"store"])->name("products.store");
+        
+        // api response
+        Route::post("/products/delete",[ProductController::class,"delete"])->name("products.delete");
     });
 });
 

@@ -24,7 +24,7 @@ class ProductController extends Controller
     {
         $page = $request->input("page") ?? $this->page;
         $search = $request->input("search") ?? $this->search;
-        $products = Product::query()->with(["category","type"])->where(function (Builder $builder) use ($search) {
+        $products = Product::query()->with(["category", "type"])->where(function (Builder $builder) use ($search) {
             $builder->where('name', 'like', "%$search%");
             $builder->orWhere('price', 'like', "%$search%");
         });
@@ -47,19 +47,28 @@ class ProductController extends Controller
 
         $filename = explode(".", $file->getClientOriginalName())[0] . "-" . Str::random(10) . "." . $file->getClientOriginalExtension();
         $path = "images/products/";
-        try{
+        try {
             Product::create([
                 "name" => $name,
                 "price" => $price,
-                "image" => $path.$filename,
+                "image" => $path . $filename,
                 "type_id" => $type_id,
                 "category_id" => $category_id
             ]);
-            $file->move($path,$filename);
-            $request->session()->flash("message","Berhasil menambahan produk");
+            $file->move($path, $filename);
+            $request->session()->flash("message", "Berhasil menambahan produk");
             return redirect()->to(route("products"));
-        }catch(Exception $e){
-            dd($e);
+        } catch (Exception $e) {
+            abort(500);
         }
+    }
+    public function delete(Request $request)
+    {
+        $id = $request->input("id");
+        Product::find($id)->delete();
+        return response()->json([
+            "status" => true
+        ])->setStatusCode(200);
+        
     }
 }
