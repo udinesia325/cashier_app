@@ -12,20 +12,19 @@ import { Input } from "@/shadcn/ui/input";
 import { Button } from "@/shadcn/ui/button";
 import InputError from "@/Components/InputError";
 
-function Add(props) {
-    const { auth, category, type } = props;
-    // console.log(props);
+function Edit({ auth, data: product, category, type }) {
     const [file, setFile] = useState();
     const { data, setData, post, processing, errors, reset } = useForm({
-        name: "",
-        price: "",
-        image: "",
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.image,
         category_id: String(category[0].id),
         type_id: String(type[0].id),
     });
     const handleSubmit = (e) => {
         e.preventDefault();
-        post(route("products.store"));
+        post(route("products.update"));
     };
     const handleInput = (key) => {
         return (e) => setData(key, e.target.value);
@@ -38,7 +37,7 @@ function Add(props) {
     return (
         <Authenticated user={auth.user}>
             <h1 className="text-3xl font-semibold text-gray-900 mb-10">
-                Tambah Produk
+                Update Produk
             </h1>
             <form
                 action=""
@@ -52,7 +51,6 @@ function Add(props) {
                         type="text"
                         value={data.name}
                         onChange={handleInput("name")}
-                        tabIndex="1"
                     />
                     <InputError message={errors.name} />
                 </div>
@@ -63,12 +61,11 @@ function Add(props) {
                         type="number"
                         value={data.price}
                         onChange={handleInput("price")}
-                        tabIndex="2"
                     />
                     <InputError message={errors.price} />
                 </div>
                 <Select
-                    defaultValue={""}
+                    defaultValue={product.category_id.toString()}
                     onValueChange={(e) => setData("category_id", e)}
                 >
                     <SelectTrigger>
@@ -84,7 +81,7 @@ function Add(props) {
                 </Select>
 
                 <Select
-                    defaultValue={""}
+                    defaultValue={product.type_id.toString()}
                     onValueChange={(e) => setData("type_id", e)}
                 >
                     <SelectTrigger>
@@ -123,7 +120,10 @@ function Add(props) {
                     </Button>
 
                     {/* agar tidak tereset saat submit */}
-                    <p className="py-2 px-4 bg-red-500 hover:bg-red-400 text-white cursor-pointer rounded-md" onClick={() => reset()}>
+                    <p
+                        className="py-2 px-4 bg-red-500 hover:bg-red-400 text-white cursor-pointer rounded-md"
+                        onClick={() => reset()}
+                    >
                         Reset
                     </p>
                     <Link
@@ -137,4 +137,4 @@ function Add(props) {
         </Authenticated>
     );
 }
-export default Add;
+export default Edit;

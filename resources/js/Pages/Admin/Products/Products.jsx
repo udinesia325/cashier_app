@@ -11,7 +11,7 @@ import {
 import { Input } from "@/shadcn/ui/input";
 import { ScrollArea } from "@/shadcn/ui/scroll-area";
 import { useToast } from "@/shadcn/ui/use-toast";
-import { Link } from "@inertiajs/react";
+import { Link, router } from "@inertiajs/react";
 import {
     getCoreRowModel,
     getPaginationRowModel,
@@ -148,7 +148,11 @@ function Products({ auth, data, flash, csrf_token }) {
                             <DropdownMenuLabel>Aksi</DropdownMenuLabel>
                             <DropdownMenuItem
                                 onClick={() =>
-                                    navigator.clipboard.writeText(payment.id)
+                                    router.get(
+                                        route("products.edit", {
+                                            id: row.getValue("id"),
+                                        })
+                                    )
                                 }
                             >
                                 Edit
@@ -161,7 +165,9 @@ function Products({ auth, data, flash, csrf_token }) {
                                         id: row.getValue("id"),
                                     })
                                 }
-                            >Hapus</DropdownMenuItem>
+                            >
+                                Hapus
+                            </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 );
@@ -203,8 +209,8 @@ function Products({ auth, data, flash, csrf_token }) {
                     Tambah Produk
                 </Link>
             </form>
-            <ScrollArea className="h-[60vh] min-h-[400px]">
-                <DataTable table={table} />
+            <ScrollArea className="h-[60vh] min-h-[400px mt-4">
+                <DataTable table={table} columns={columns} />
             </ScrollArea>
             <div className="flex gap-4 mt-8">
                 {links.prev != null ? (

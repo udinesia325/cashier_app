@@ -46,7 +46,9 @@ Route::middleware('auth')->prefix("admin")->group(function () {
         Route::get("/products",[ProductController::class,"index"])->name("products");
         Route::get("/products/add",[ProductController::class,"add"])->name("products.add");
         Route::post("/products/store",[ProductController::class,"store"])->name("products.store");
-        
+        Route::get("/products/edit/{id}",[ProductController::class,"edit"])->name("products.edit");
+        Route::post("/products/update",[ProductController::class,"update"])->name("products.update");
+
         // api response
         Route::post("/products/delete",[ProductController::class,"delete"])->name("products.delete");
     });

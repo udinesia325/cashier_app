@@ -10,7 +10,7 @@ import {
 } from "@/shadcn/ui/table";
 import { flexRender } from "@tanstack/react-table";
 
-function DataTable({ table }) {
+function DataTable({ table,columns = [] }) {
     return (
         <Table className="bg-white m-3 max-w-[900px]">
             <TableHeader>
