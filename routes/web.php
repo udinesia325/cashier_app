@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\UserController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
@@ -43,6 +44,7 @@ Route::middleware('auth')->prefix("admin")->group(function () {
 
     // 
     Route::middleware("role:admin")->group(function(){
+        // product routes
         Route::get("/products",[ProductController::class,"index"])->name("products");
         Route::get("/products/add",[ProductController::class,"add"])->name("products.add");
         Route::post("/products/store",[ProductController::class,"store"])->name("products.store");
@@ -51,7 +53,13 @@ Route::middleware('auth')->prefix("admin")->group(function () {
 
         // api response
         Route::post("/products/delete",[ProductController::class,"delete"])->name("products.delete");
+
+        // category routes
+        Route::get("/category",[CategoryController::class,"index"])->name("category");
+        Route::post("/category/store",[CategoryController::class,"store"])->name("category.store");
     });
+
+
 });
 
 require __DIR__.'/auth.php';

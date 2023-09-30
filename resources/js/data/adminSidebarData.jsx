@@ -40,7 +40,7 @@ const adminSidebarData = [
             {
                 icon:<CiShoppingTag className="text-lg" />,
                 name:"Kategori",
-                href: route("dashboard")
+                href: route("category")
             }
         ]
     },
