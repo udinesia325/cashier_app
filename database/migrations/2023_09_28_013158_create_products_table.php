@@ -16,13 +16,13 @@ return new class extends Migration
             $table->string('name')->nullable(false);
             $table->integer('price')->nullable(false);
             $table->string('image')->nullable();
-            $table->unsignedBigInteger("type_id")->nullable(false);
-            $table->unsignedBigInteger("category_id")->nullable(false);
+            $table->unsignedBigInteger("type_id")->nullable();
+            $table->unsignedBigInteger("category_id")->nullable();
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign("type_id")->on("types")->references("id");
-            $table->foreign("category_id")->on("categories")->references("id");
+            $table->foreign("type_id")->on("types")->references("id")->onDelete("SET NULL")->onUpdate("CASCADE");
+            $table->foreign("category_id")->on("categories")->references("id")->onDelete("SET NULL")->onUpdate("CASCADE");
         });
     }
 

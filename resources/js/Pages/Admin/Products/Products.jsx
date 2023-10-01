@@ -28,15 +28,8 @@ function Products({ auth, data, flash, csrf_token }) {
     const urlParams = new URLSearchParams(window.location.search);
     const search = urlParams.get("search") || "";
     const [searchParams, setSearchParams] = useState(search);
-    const { toast } = useToast();
-    useEffect(() => {
-        if (flash != false) {
-            toast({
-                description: flash,
-            });
-        }
-    }, []);
     const [products, setProducts] = useState(data.data);
+    const {toast} = useToast()
     const [deleteItem, setDeleteItem] = useState({
         status: false,
         id: null,
@@ -187,7 +180,7 @@ function Products({ auth, data, flash, csrf_token }) {
         },
     });
     return (
-        <Authenticated user={auth.user}>
+        <Authenticated user={auth.user} flash={flash}>
             <h1 className=" mb-5 text-3xl text-slate-800 pl-2 font-semibold">
                 Products
             </h1>

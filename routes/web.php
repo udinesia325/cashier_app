@@ -32,34 +32,35 @@ Route::get('/', function () {
 // Route::get('/dashboard', function () {
 //     return Inertia::render('Dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard');
-Route::get('/dashboard', [DashboardController::class,"index"])->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, "index"])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->prefix("admin")->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get("/user",[UserController::class,"index"])->name("admin.user");
-    Route::get("/add",[UserController::class,"add"])->name("admin.user.add");
+    Route::get("/user", [UserController::class, "index"])->name("admin.user");
+    Route::get("/add", [UserController::class, "add"])->name("admin.user.add");
 
     // 
-    Route::middleware("role:admin")->group(function(){
+    Route::middleware("role:admin")->group(function () {
         // product routes
-        Route::get("/products",[ProductController::class,"index"])->name("products");
-        Route::get("/products/add",[ProductController::class,"add"])->name("products.add");
-        Route::post("/products/store",[ProductController::class,"store"])->name("products.store");
-        Route::get("/products/edit/{id}",[ProductController::class,"edit"])->name("products.edit");
-        Route::post("/products/update",[ProductController::class,"update"])->name("products.update");
+        Route::get("/products", [ProductController::class, "index"])->name("products");
+        Route::get("/products/add", [ProductController::class, "add"])->name("products.add");
+        Route::post("/products/store", [ProductController::class, "store"])->name("products.store");
+        Route::get("/products/edit/{id}", [ProductController::class, "edit"])->name("products.edit");
+        Route::post("/products/update", [ProductController::class, "update"])->name("products.update");
 
         // api response
-        Route::post("/products/delete",[ProductController::class,"delete"])->name("products.delete");
+        Route::post("/products/delete", [ProductController::class, "delete"])->name("products.delete");
 
         // category routes
-        Route::get("/category",[CategoryController::class,"index"])->name("category");
-        Route::post("/category/store",[CategoryController::class,"store"])->name("category.store");
+        Route::get("/category", [CategoryController::class, "index"])->name("category");
+        Route::post("/category/store", [CategoryController::class, "store"])->name("category.store");
+        Route::delete("/category/delete", [CategoryController::class, "delete"])->name("category.delete");
+        Route::post("/category/update/{id}", [CategoryController::class, "update"])
+            ->name("category.update")->where('id', '[0-9]+');;
     });
-
-
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

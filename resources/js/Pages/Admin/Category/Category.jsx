@@ -4,6 +4,7 @@ import TableTypes from "./TableTypes";
 import { Head } from "@inertiajs/react";
 
 function Category({ auth, category, type }) {
+
     return (
         <Authenticated user={auth.user}>
             <Head title="Category" />

@@ -1,13 +1,27 @@
+import NavbarAdmin from "@/Components/Admin/Navbar";
+import SidebarAdmin from "@/Components/Admin/Sidebar";
 import Navbar from "@/Components/Navbar";
 import Sidebar from "@/Components/Sidebar";
 import Transaksi from "@/Components/Transaksi";
-import NavbarAdmin from "@/Components/Admin/Navbar";
-import SidebarAdmin from "@/Components/Admin/Sidebar";
 import { Toaster } from "@/shadcn/ui/toaster";
-import { ScrollArea } from "@/shadcn/ui/scroll-area";
+import { useToast } from "@/shadcn/ui/use-toast";
+import { useEffect } from "react";
 
-export default function Authenticated({ user, header, children }) {
+export default function Authenticated({
+    user,
+    header,
+    children,
+    flash = false,
+}) {
     if (user.role == "admin") {
+        const { toast } = useToast();
+        useEffect(() => {
+            if (flash != false) {
+                toast({
+                    description: flash,
+                });
+            }
+        }, []);
         return (
             <div className="w-full h-screen grid grid-cols-[250px_1fr_1fr_350px] grid-rows-[80px_1fr]">
                 <NavbarAdmin user={user} />

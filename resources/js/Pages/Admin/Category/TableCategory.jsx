@@ -1,25 +1,61 @@
 import {
     getCoreRowModel,
+    getFilteredRowModel,
     getPaginationRowModel,
     getSortedRowModel,
     useReactTable,
-    getFilteredRowModel,
 } from "@tanstack/react-table";
 
 import DataTable from "@/Components/DataTable";
 import { Button } from "@/shadcn/ui/button";
 import { ArrowUpDown } from "lucide-react";
 
-import React, { useState } from "react";
-import { Input } from "@/shadcn/ui/input";
-import { Link, useForm } from "@inertiajs/react";
-import AddAlert from "./AddAlert";
 import InputError from "@/Components/InputError";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/shadcn/ui/alert-dialog";
+import { Input } from "@/shadcn/ui/input";
+import { useToast } from "@/shadcn/ui/use-toast";
+import { useForm } from "@inertiajs/react";
+import { useState } from "react";
+import { BsFillTrashFill } from "react-icons/bs";
+import { FaEdit } from "react-icons/fa";
+import AddAlert from "./AddAlert";
 
 function TableCategory({ category }) {
     const [categories, setCategories] = useState(category);
-    const [categorySort, setCategorySort] = useState([]);
+    const [categorySort, setCategorySort] = useState();
     const [columnFilters, setColumnFilters] = useState([]);
+    const { toast } = useToast();
+    const [title, setTitle] = useState("");
+    const [open, setOpen] = useState(false);
+    const [targetId, setTargetId] = useState(null);
+    const { data, setData, errors, processing, post, reset, clearErrors } =
+        useForm({
+            name: "",
+        });
+    const handleDelete = (id) => {};
+    const handleEdit = (id, name) => {
+        setTargetId(id);
+        setTitle("Edit Kategori");
+        setOpen(true);
+        setData("name", name);
+    };
+    const closeAlert = () => {
+        setOpen(false);
+        reset("name", "");
+        clearErrors("name", "");
+        setTitle("");
+        setTargetId(null);
+    };
     const categoryColumns = [
         {
             accessorKey: "id",
@@ -44,9 +80,40 @@ function TableCategory({ category }) {
                 );
             },
         },
+        {
+            accessorKey: "#",
+            header: "Aksi",
+            cell: ({ row }) => {
+                const { delete: del } = useForm({ id: row.getValue("id") });
+
+                return (
+                    <div className="flex gap-3 text-xl">
+                        <AlertDelete
+                            title="Konfirmasi"
+                            deleteFn={() => {
+                                del(route("category.delete"), {
+                                    onSuccess: () =>
+                                        toast({
+                                            description: "Berhasil dihapus",
+                                        }),
+                                });
+                            }}
+                        />
+                        <FaEdit
+                            onClick={handleEdit.bind(
+                                this,
+                                row.getValue("id"),
+                                row.getValue("name")
+                            )}
+                            className="text-green-500 hover:text-green-400"
+                        />
+                    </div>
+                );
+            },
+        },
     ];
     const tableCategories = useReactTable({
-        data: categories,
+        data: category,
         columns: categoryColumns,
         getCoreRowModel: getCoreRowModel(),
         getSortedRowModel: getSortedRowModel(),
@@ -59,21 +126,31 @@ function TableCategory({ category }) {
             columnFilters,
         },
     });
-    const [open, setOpen] = useState(false);
-    const { data, setData, errors, processing, post, reset, clearErrors } =
-        useForm({
-            name: "",
+    const onSuccess = (description) => {
+        reset("name", "");
+        setOpen(false);
+        toast({
+            description,
         });
+        clearErrors("name", "");
+    };
     const handleSubmit = (e) => {
         e.preventDefault();
+        if (targetId != null) {
+            post(route("category.update", { id: targetId }), {
+                onSuccess: () => {
+                    onSuccess("berhasil memperbarui kategori");
+                },
+            });
+            return;
+        }
         post(route("category.store"), {
             onSuccess: () => {
-                setOpen(false);
-                reset("name", "");
-                clearErrors("name", "");
+                onSuccess("berhasil menambahkan kategori baru");
             },
         });
     };
+
     return (
         <>
             <h1 className="text-xl font-semibold">Kategori</h1>
@@ -94,7 +171,7 @@ function TableCategory({ category }) {
                 <AddAlert
                     open={open}
                     setOpen={setOpen}
-                    title="Tambahkan Kategori Baru"
+                    title={title || "Tambahkan Kategori Baru"}
                 >
                     <form onSubmit={handleSubmit}>
                         <Input
@@ -106,11 +183,7 @@ function TableCategory({ category }) {
                         <div className="mt-3 flex justify-end gap-x-3 items-center rounded">
                             <span
                                 className="py-2 px-3 font-semibold bg-red-500 text-white hover:bg-red-400 rounded cursor-pointer"
-                                onClick={() => {
-                                    setOpen(false);
-                                    reset("name", "");
-                                    clearErrors("name", "");
-                                }}
+                                onClick={closeAlert}
                             >
                                 Batal
                             </span>
@@ -126,3 +199,29 @@ function TableCategory({ category }) {
 }
 
 export default TableCategory;
+
+function AlertDelete({ title = "", deleteFn }) {
+    return (
+        <AlertDialog>
+            <AlertDialogTrigger>
+                <BsFillTrashFill className="text-red-500 hover:text-red-400" />
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>{title}</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        Tindakan ini akan menghapus kategori dari sistem dan
+                        tidak dapat di kembalikan, pastikan sudah merekap data
+                        jika ada
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={deleteFn}>
+                        Lanjut
+                    </AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
+    );
+}
