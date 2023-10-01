@@ -1,7 +1,6 @@
 import {
     getCoreRowModel,
     getFilteredRowModel,
-    getPaginationRowModel,
     getSortedRowModel,
     useReactTable,
 } from "@tanstack/react-table";
@@ -23,6 +22,7 @@ import {
     AlertDialogTrigger,
 } from "@/shadcn/ui/alert-dialog";
 import { Input } from "@/shadcn/ui/input";
+import { ScrollArea } from "@/shadcn/ui/scroll-area";
 import { useToast } from "@/shadcn/ui/use-toast";
 import { useForm } from "@inertiajs/react";
 import { useState } from "react";
@@ -31,7 +31,6 @@ import { FaEdit } from "react-icons/fa";
 import AddAlert from "./AddAlert";
 
 function TableCategory({ category }) {
-    const [categories, setCategories] = useState(category);
     const [categorySort, setCategorySort] = useState();
     const [columnFilters, setColumnFilters] = useState([]);
     const { toast } = useToast();
@@ -42,7 +41,6 @@ function TableCategory({ category }) {
         useForm({
             name: "",
         });
-    const handleDelete = (id) => {};
     const handleEdit = (id, name) => {
         setTargetId(id);
         setTitle("Edit Kategori");
@@ -59,7 +57,16 @@ function TableCategory({ category }) {
     const categoryColumns = [
         {
             accessorKey: "id",
-            header: "#",
+            header: () => {
+                return (
+                    <div
+                        className="flex items-center gap-1 cursor-pointer"
+                        onClick={() => setCategorySort([])}
+                    >
+                        No <ArrowUpDown className=" h-4 w-4" />
+                    </div>
+                );
+            },
             cell: ({ row }) => {
                 return row.index + 1;
             },
@@ -117,7 +124,6 @@ function TableCategory({ category }) {
         columns: categoryColumns,
         getCoreRowModel: getCoreRowModel(),
         getSortedRowModel: getSortedRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
         onSortingChange: setCategorySort,
         onColumnFiltersChange: setColumnFilters,
         getFilteredRowModel: getFilteredRowModel(),
@@ -154,7 +160,7 @@ function TableCategory({ category }) {
     return (
         <>
             <h1 className="text-xl font-semibold">Kategori</h1>
-            <div className="flex gap-x-5 my-5">
+            <div className="flex gap-x-5 my-5 px-1">
                 <Input
                     placeholder="Filter Name..."
                     value={
@@ -187,13 +193,14 @@ function TableCategory({ category }) {
                             >
                                 Batal
                             </span>
-                            <Button>Simpan</Button>
+                            <Button disabled={processing}>Simpan</Button>
                         </div>
                     </form>
                 </AddAlert>
             </div>
-
-            <DataTable table={tableCategories} columns={categoryColumns} />
+            <ScrollArea className="h-[500px]">
+                <DataTable table={tableCategories} columns={categoryColumns} />
+            </ScrollArea>
         </>
     );
 }

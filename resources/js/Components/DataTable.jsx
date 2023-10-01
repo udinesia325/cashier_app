@@ -54,7 +54,7 @@ function DataTable({ table,columns = [] }) {
                             colSpan={columns.length}
                             className="h-24 text-center"
                         >
-                            No results.
+                            Tidak ada hasil.
                         </TableCell>
                     </TableRow>
                 )}

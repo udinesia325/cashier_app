@@ -29,7 +29,7 @@ function Products({ auth, data, flash, csrf_token }) {
     const search = urlParams.get("search") || "";
     const [searchParams, setSearchParams] = useState(search);
     const [products, setProducts] = useState(data.data);
-    const {toast} = useToast()
+    const { toast } = useToast();
     const [deleteItem, setDeleteItem] = useState({
         status: false,
         id: null,
@@ -114,14 +114,22 @@ function Products({ auth, data, flash, csrf_token }) {
             accessorKey: "type",
             header: "Tipe",
             cell: ({ row }) => {
-                return <span>{row.getValue("type").name}</span>;
+                return (
+                    <span>
+                        {row.getValue("type")?.name || "Tidak diketahui"}
+                    </span>
+                );
             },
         },
         {
             accessorKey: "category",
             header: "Kategori",
             cell: ({ row }) => {
-                return <span>{row.getValue("category").name}</span>;
+                return (
+                    <span>
+                        {row.getValue("category")?.name || "Tidak diketahui"}
+                    </span>
+                );
             },
         },
         {

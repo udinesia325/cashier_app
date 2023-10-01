@@ -19,8 +19,8 @@ function Edit({ auth, data: product, category, type }) {
         name: product.name,
         price: product.price,
         image: product.image,
-        category_id: String(category[0].id),
-        type_id: String(type[0].id),
+        category_id: String(category[0]?.id || ""),
+        type_id: String(type[0]?.id || ""),
     });
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -65,7 +65,7 @@ function Edit({ auth, data: product, category, type }) {
                     <InputError message={errors.price} />
                 </div>
                 <Select
-                    defaultValue={product.category_id.toString()}
+                    defaultValue={product.category_id?.toString() || ""}
                     onValueChange={(e) => setData("category_id", e)}
                 >
                     <SelectTrigger>
@@ -81,7 +81,7 @@ function Edit({ auth, data: product, category, type }) {
                 </Select>
 
                 <Select
-                    defaultValue={product.type_id.toString()}
+                    defaultValue={product.type_id?.toString() || ""}
                     onValueChange={(e) => setData("type_id", e)}
                 >
                     <SelectTrigger>
