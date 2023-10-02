@@ -1,13 +1,6 @@
 import DataTable from "@/Components/DataTable";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { Button } from "@/shadcn/ui/button";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuTrigger,
-} from "@/shadcn/ui/dropdown-menu";
 import { Input } from "@/shadcn/ui/input";
 import { ScrollArea } from "@/shadcn/ui/scroll-area";
 import { useToast } from "@/shadcn/ui/use-toast";
@@ -19,9 +12,10 @@ import {
     useReactTable,
 } from "@tanstack/react-table";
 import axios from "axios";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
-import { useEffect, useState } from "react";
-import { FaSearch } from "react-icons/fa";
+import { ArrowUpDown } from "lucide-react";
+import { useState } from "react";
+import { FaEdit, FaSearch } from "react-icons/fa";
+import { BsFillTrashFill } from "react-icons/bs";
 
 function Products({ auth, data, flash, csrf_token }) {
     const { links, meta } = data;
@@ -61,7 +55,7 @@ function Products({ auth, data, flash, csrf_token }) {
     const columns = [
         {
             accessorKey: "id",
-            header: "#",
+            header: () => <ArrowUpDown onClick={() => setSorting([])} className="ml-2 h-4 w-4" />,
             cell: ({ row }) => {
                 return row.index + 1;
             },
@@ -138,39 +132,27 @@ function Products({ auth, data, flash, csrf_token }) {
             cell: ({ row }) => {
                 const payment = row.original;
                 return (
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0">
-                                <span className="sr-only">Open menu</span>
-                                <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Aksi</DropdownMenuLabel>
-                            <DropdownMenuItem
-                                onClick={() =>
-                                    router.get(
-                                        route("products.edit", {
-                                            id: row.getValue("id"),
-                                        })
-                                    )
-                                }
-                            >
-                                Edit
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                                className="focus:bg-red-100"
-                                onClick={() =>
-                                    setDeleteItem({
-                                        status: true,
+                    <div className="flex gap-3 text-xl">
+                        <FaEdit
+                            className="text-green-500 hover:text-green-400"
+                            onClick={() =>
+                                router.get(
+                                    route("products.edit", {
                                         id: row.getValue("id"),
                                     })
-                                }
-                            >
-                                Hapus
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                                )
+                            }
+                        />
+                        <BsFillTrashFill
+                            className="text-red-500 hover:text-red-400"
+                            onClick={() =>
+                                setDeleteItem({
+                                    status: true,
+                                    id: row.getValue("id"),
+                                })
+                            }
+                        />
+                    </div>
                 );
             },
         },
@@ -190,7 +172,7 @@ function Products({ auth, data, flash, csrf_token }) {
     return (
         <Authenticated user={auth.user} flash={flash}>
             <h1 className=" mb-5 text-3xl text-slate-800 pl-2 font-semibold">
-                Products
+                Data Produk
             </h1>
             <form action="" method="get" className="flex">
                 <Input
