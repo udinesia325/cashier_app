@@ -1,13 +1,13 @@
 import { ActiveSidebarContext } from "@/Layouts/AuthenticatedLayout";
-import React from "react";
-import { useContext } from "react";
-import teh from "../../../assets/esteh.jpg";
-import kopi from "../../../assets/kopi.jpg";
+import { addProduct } from "@/features/transaction/transactionSlice";
 import { useGetProductsQuery } from "@/services/productApi";
 import { ScrollArea } from "@/shadcn/ui/scroll-area";
+import { useContext } from "react";
+import { useDispatch } from "react-redux";
 function Products() {
     const { activeMenu } = useContext(ActiveSidebarContext);
     const { data: products, isLoading } = useGetProductsQuery(activeMenu);
+    const dispatch = useDispatch()
     if (isLoading) {
         return <p>Memuat ...</p>;
     }
@@ -20,7 +20,8 @@ function Products() {
                 {products.data?.map((product, index) => (
                     <div
                         key={index}
-                        className="w-[20%] min-w-[165px] basis-1/5 p-2 bg-white rounded-xl cursor-pointer text-center transition-all hover:shadow-sm hover:scale-105"
+                        className="w-[20%] min-w-[165px] basis-1/5 p-2 bg-white rounded-xl cursor-pointer text-center transition-all hover:shadow-md hover:scale-105"
+                        onClick={() => dispatch(addProduct(product))}
                     >
                         <img
                             src={`/${product.image}`}

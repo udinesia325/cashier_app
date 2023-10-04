@@ -2,7 +2,7 @@ import NavbarAdmin from "@/Components/Admin/Navbar";
 import SidebarAdmin from "@/Components/Admin/Sidebar";
 import Navbar from "@/Components/Navbar";
 import Sidebar from "@/Components/Sidebar";
-import Transaksi from "@/Components/Transaksi";
+import Transaksi from "@/Components/Staff/Transaksi";
 import { Toaster } from "@/shadcn/ui/toaster";
 import { useToast } from "@/shadcn/ui/use-toast";
 import { useState } from "react";
