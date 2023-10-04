@@ -12,8 +12,9 @@ class Type extends Model
     public $timestamps = false;
     protected $guarded = ['id'];
 
-    public function product(): HasMany
+    public function category(): HasMany
     {
-        return  $this->hasMany(Product::class);
+        return  $this->hasMany(Category::class);
     }
+    
 }

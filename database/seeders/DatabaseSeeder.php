@@ -30,11 +30,12 @@ class DatabaseSeeder extends Seeder
         Type::create([
             "name" => "makanan"
         ]);
-        Type::create([
+        $type = Type::create([
             "name" => "minuman"
         ]);
         Category::create([
-            "name" => "Nasi Goreng"
+            "name" => "Nasi Goreng",
+            "type_id" => $type->id
         ]);
     }
 }

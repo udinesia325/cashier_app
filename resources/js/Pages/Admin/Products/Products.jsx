@@ -105,12 +105,12 @@ function Products({ auth, data, flash, csrf_token }) {
             },
         },
         {
-            accessorKey: "type",
+            accessorKey: "#",
             header: "Tipe",
             cell: ({ row }) => {
                 return (
                     <span>
-                        {row.getValue("type")?.name || "Tidak diketahui"}
+                        {row.getValue("category")?.type.name || "Tidak diketahui"}
                     </span>
                 );
             },
@@ -197,20 +197,20 @@ function Products({ auth, data, flash, csrf_token }) {
             </ScrollArea>
             <div className="flex gap-4 mt-8">
                 {links.prev != null ? (
-                    <a
+                    <Link
                         href={`${links.prev}&search=${search}`}
                         className="bg-gray-800 py-1 px-5 text-white rounded-md"
                     >
                         Prev
-                    </a>
+                    </Link>
                 ) : null}
                 {links.next != null ? (
-                    <a
+                    <Link
                         href={`${links.next}&search=${search}`}
                         className="bg-gray-800 py-1 px-5 text-white rounded-md"
                     >
                         Next
-                    </a>
+                    </Link>
                 ) : null}
             </div>
             {/* alert delete */}

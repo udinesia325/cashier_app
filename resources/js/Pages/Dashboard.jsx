@@ -1,25 +1,32 @@
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import AuthenticatedLayout, { ActiveSidebarContext } from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import teh from "../../assets/esteh.jpg";
 import kopi from "../../assets/kopi.jpg";
+import { useDispatch, useSelector } from "react-redux";
+import { useGetProductsQuery } from "@/services/productApi";
+import { useState } from "react";
+import { useEffect } from "react";
+import { setProduct } from "@/features/product/ProductSlice";
+import { useContext } from "react";
+import Products from "@/Components/Staff/Products";
 
 export default function Dashboard({ auth }) {
+    // const dispatch = useDispatch()
+    // const {data,isLoading,error} = useGetProductsQuery()
+    // const productSelector = useSelector(state => state.product)
+    // useEffect(() => {
+    //     if(data) {
+    //         dispatch(setProduct(data.data))
+    //     }
+    // },[data])
+    // console.log({productSelector});
+    
     return (
         <AuthenticatedLayout user={auth.user}>
             <Head title="Dashboard" />
             <div className="w-full mx-auto p-3 ">
-                <div className="flex flex-wrap gap-4">
-                    <div className="w-[20%] basis-1/5 p-2 bg-white rounded-xl cursor-pointer text-center">
-                        <img src={teh} alt="esteh" className="rounded-md w-full aspect-square" />
-                        <h1 className="text-slate-700 font-bold truncate">Es Teh</h1>
-                        <p className="text-sm text-slate-500">Rp. 8.000</p>
-                    </div>
-                    <div className="w-[20%] basis-1/5 p-2 bg-white rounded-xl cursor-pointer text-center">
-                        <img src={kopi} alt="esteh" className="rounded-md w-full aspect-square" />
-                        <h1 className="text-slate-700 font-bold truncate">Kopi Americano</h1>
-                        <p className="text-sm text-slate-500">Rp. 8.000</p>
-                    </div>
-                </div>
+                <p className="text-gray-600 text-sm ml-2">Klik item untuk menambahkan ke daftar pesanan.</p>
+                <Products />
             </div>
         </AuthenticatedLayout>
     );

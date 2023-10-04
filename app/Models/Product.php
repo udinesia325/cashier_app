@@ -13,11 +13,6 @@ class Product extends Model
     use HasFactory, HasUuids, SoftDeletes;
     protected $guarded = ["id", "created_at", "updated_at"];
 
-    public function type(): BelongsTo
-    {
-        return $this->belongsTo(Type::class,"type_id","id");
-    }
-
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class,"category_id","id");

@@ -13,7 +13,7 @@ import { Button } from "@/shadcn/ui/button";
 import InputError from "@/Components/InputError";
 
 function Add(props) {
-    const { auth, category, type } = props;
+    const { auth, category } = props;
     // console.log(props);
     const [file, setFile] = useState();
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -21,7 +21,6 @@ function Add(props) {
         price: "",
         image: "",
         category_id: String(category[0].id),
-        type_id: String(type[0].id),
     });
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -76,22 +75,6 @@ function Add(props) {
                     </SelectTrigger>
                     <SelectContent>
                         {category.map((c) => (
-                            <SelectItem key={c.id} value={c.id.toString()}>
-                                {c.name}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
-
-                <Select
-                    defaultValue={""}
-                    onValueChange={(e) => setData("type_id", e)}
-                >
-                    <SelectTrigger>
-                        <SelectValue placeholder="Tipe" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {type.map((c) => (
                             <SelectItem key={c.id} value={c.id.toString()}>
                                 {c.name}
                             </SelectItem>

@@ -7,7 +7,6 @@ use App\Http\Requests\UpdateProductRequest;
 use App\Http\Resources\ProductCollection;
 use App\Models\Category;
 use App\Models\Product;
-use App\Models\Type;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -25,7 +24,7 @@ class ProductController extends Controller
     {
         $page = $request->input("page") ?? $this->page;
         $search = $request->input("search") ?? $this->search;
-        $products = Product::query()->with(["category", "type"])->where(function (Builder $builder) use ($search) {
+        $products = Product::query()->with(["category.type"])->where(function (Builder $builder) use ($search) {
             $builder->where('name', 'like', "%$search%");
             $builder->orWhere('price', 'like', "%$search%");
         })->latest();
@@ -34,16 +33,14 @@ class ProductController extends Controller
     }
     public function add()
     {
-        $type = Type::all();
         $category = Category::all();
-        return Inertia::render("Admin/Products/Add", compact("type", "category"));
+        return Inertia::render("Admin/Products/Add", compact("category"));
     }
     public function store(StoreProductRequest $request)
     {
         $file = $request->file("image");
         $name = $request->input("name");
         $price = $request->input("price");
-        $type_id = $request->input("type_id");
         $category_id = $request->input("category_id");
 
         $filename = explode(".", $file->getClientOriginalName())[0] . "-" . Str::random(10) . "." . $file->getClientOriginalExtension();
@@ -53,7 +50,6 @@ class ProductController extends Controller
                 "name" => $name,
                 "price" => $price,
                 "image" => $path . $filename,
-                "type_id" => $type_id,
                 "category_id" => $category_id
             ]);
             $file->move($path, $filename);
@@ -81,9 +77,8 @@ class ProductController extends Controller
         if (!$id) return redirect(route("products"));
         $data =  Product::find($id);
         if (!$data) abort(404);
-        $type = Type::all();
         $category = Category::all();
-        return Inertia::render("Admin/Products/Edit", compact("data", "type", "category"));
+        return Inertia::render("Admin/Products/Edit", compact("data", "category"));
     }
     public function update(UpdateProductRequest $request)
     {
@@ -91,7 +86,6 @@ class ProductController extends Controller
         $name = $request->input("name");
         $price = $request->input("price");
         $category_id = $request->input("category_id");
-        $type_id = $request->input("type_id");
         $image = $request->file("image");
 
         $product = Product::find($id);
@@ -107,7 +101,6 @@ class ProductController extends Controller
         $product->name = $name;
         $product->price = $price;
         $product->category_id = $category_id;
-        $product->type_id = $type_id;
         if ($image) {
             // jika ada gambar maka perbarui di database dan hapus di public 
             $filename = explode(".", $image->getClientOriginalName())[0] . "-" . Str::random(10) . "." . $image->getClientOriginalExtension();
@@ -128,5 +121,22 @@ class ProductController extends Controller
 
         $request->session()->flash("message", "Berhasil memperparui produk");
         return redirect()->to(route("products"));
+    }
+
+    public function indexApi(Request $request)
+    {
+        $page = $request->input("page") ?? $this->page;
+        $search = $request->input("search") ?? $this->search;
+        $perPage = $request->input("perPage") ?? $this->perPage;
+        $products = Product::query()
+            ->has("category.type")
+            ->whereHas("category", function (Builder $builder) use ($search) {
+                $builder->where('name', 'like', "%$search%");
+            })
+            ->orWhere('name', 'like', "%$search%")
+            ->latest();
+
+        $data = new ProductCollection($products->paginate(perPage: $perPage, page: $page));
+        return ($data)->response();
     }
 }

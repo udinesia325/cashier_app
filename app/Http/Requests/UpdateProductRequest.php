@@ -25,7 +25,6 @@ class UpdateProductRequest extends FormRequest
             "name" => "required",
             "price" => "required|numeric",
             "category_id" => "required|numeric",
-            "type_id" => "required|numeric",
         ];
     }
 }

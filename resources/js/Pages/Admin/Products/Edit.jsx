@@ -12,7 +12,7 @@ import { Input } from "@/shadcn/ui/input";
 import { Button } from "@/shadcn/ui/button";
 import InputError from "@/Components/InputError";
 
-function Edit({ auth, data: product, category, type }) {
+function Edit({ auth, data: product, category }) {
     const [file, setFile] = useState();
     const { data, setData, post, processing, errors, reset } = useForm({
         id: product.id,
@@ -20,7 +20,6 @@ function Edit({ auth, data: product, category, type }) {
         price: product.price,
         image: product.image,
         category_id: String(category[0]?.id || ""),
-        type_id: String(type[0]?.id || ""),
     });
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -73,22 +72,6 @@ function Edit({ auth, data: product, category, type }) {
                     </SelectTrigger>
                     <SelectContent>
                         {category.map((c) => (
-                            <SelectItem key={c.id} value={c.id.toString()}>
-                                {c.name}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
-
-                <Select
-                    defaultValue={product.type_id?.toString() || ""}
-                    onValueChange={(e) => setData("type_id", e)}
-                >
-                    <SelectTrigger>
-                        <SelectValue placeholder="Tipe" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {type.map((c) => (
                             <SelectItem key={c.id} value={c.id.toString()}>
                                 {c.name}
                             </SelectItem>

@@ -21,6 +21,13 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/shadcn/ui/alert-dialog";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/shadcn/ui/select";
 import { Input } from "@/shadcn/ui/input";
 import { ScrollArea } from "@/shadcn/ui/scroll-area";
 import { useToast } from "@/shadcn/ui/use-toast";
@@ -30,7 +37,7 @@ import { BsFillTrashFill } from "react-icons/bs";
 import { FaEdit } from "react-icons/fa";
 import AddAlert from "./AddAlert";
 
-function TableCategory({ category }) {
+function TableCategory({ category, type }) {
     const [categorySort, setCategorySort] = useState();
     const [columnFilters, setColumnFilters] = useState([]);
     const { toast } = useToast();
@@ -40,12 +47,16 @@ function TableCategory({ category }) {
     const { data, setData, errors, processing, post, reset, clearErrors } =
         useForm({
             name: "",
+            type_id: "",
         });
-    const handleEdit = (id, name) => {
+    const handleEdit = (id, name,type_id) => {
         setTargetId(id);
         setTitle("Edit Kategori");
         setOpen(true);
-        setData("name", name);
+        setData({
+            name,
+            type_id
+        })
     };
     const closeAlert = () => {
         setOpen(false);
@@ -88,6 +99,23 @@ function TableCategory({ category }) {
             },
         },
         {
+            accessorKey: "type",
+            header: ({ column }) => {
+                return (
+                    <Button
+                        variant="ghost"
+                        onClick={() =>
+                            column.toggleSorting(column.getIsSorted() === "asc")
+                        }
+                    >
+                        Tipe
+                        <ArrowUpDown className="ml-2 h-4 w-4" />
+                    </Button>
+                );
+            },
+            cell: ({ row }) => row.getValue("type")?.name || "-",
+        },
+        {
             accessorKey: "#",
             header: "Aksi",
             cell: ({ row }) => {
@@ -110,7 +138,8 @@ function TableCategory({ category }) {
                             onClick={handleEdit.bind(
                                 this,
                                 row.getValue("id"),
-                                row.getValue("name")
+                                row.getValue("name"),
+                                row.getValue("type")?.id || type[0].id,
                             )}
                             className="text-green-500 hover:text-green-400"
                         />
@@ -186,6 +215,26 @@ function TableCategory({ category }) {
                             onChange={(e) => setData("name", e.target.value)}
                         />
                         <InputError message={errors.name} />
+                        <Select
+                            defaultValue={""}
+                            onValueChange={(e) => setData("type_id", String(e))}
+                        >
+                            <SelectTrigger className="my-2">
+                                <SelectValue placeholder="Tipe" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {type.map((t) => (
+                                    <SelectItem
+                                        key={t.id}
+                                        value={t.id.toString()}
+                                    >
+                                        {t.name}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        <InputError message={errors.type_id} />
+
                         <div className="mt-3 flex justify-end gap-x-3 items-center rounded">
                             <span
                                 className="py-2 px-3 font-semibold bg-red-500 text-white hover:bg-red-400 rounded cursor-pointer"

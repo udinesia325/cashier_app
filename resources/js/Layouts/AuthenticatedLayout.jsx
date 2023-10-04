@@ -5,7 +5,12 @@ import Sidebar from "@/Components/Sidebar";
 import Transaksi from "@/Components/Transaksi";
 import { Toaster } from "@/shadcn/ui/toaster";
 import { useToast } from "@/shadcn/ui/use-toast";
+import { useState } from "react";
+import { createContext } from "react";
 import { useEffect } from "react";
+
+
+export const ActiveSidebarContext = createContext(null)
 
 export default function Authenticated({
     user,
@@ -35,12 +40,18 @@ export default function Authenticated({
             </div>
         );
     }
+
+    //  halaman staff 
+    const [activeMenu, setActiveMenu] = useState("")
+
     return (
         <div className="w-full h-screen grid grid-cols-[250px_1fr_1fr_350px] grid-rows-[80px_1fr]">
+            <ActiveSidebarContext.Provider value={{ activeMenu,setActiveMenu }}>
             <Navbar user={user} />
             <Transaksi />
             <Sidebar />
             <div className="col-span-2 bg-gray-200">{children}</div>
+            </ActiveSidebarContext.Provider>
         </div>
     );
 }
