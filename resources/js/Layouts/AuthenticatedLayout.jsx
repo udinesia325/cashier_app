@@ -51,6 +51,7 @@ export default function Authenticated({
             <Transaksi />
             <Sidebar />
             <div className="col-span-2 bg-gray-200">{children}</div>
+            <Toaster />
             </ActiveSidebarContext.Provider>
         </div>
     );

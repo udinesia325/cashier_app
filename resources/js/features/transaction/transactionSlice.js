@@ -4,6 +4,8 @@ const initialState = {
     table_name: "",
     products: [],
     total: 0,
+    pay: 0,
+    change: 0,
 };
 
 export const transactionSlice = createSlice({
@@ -18,11 +20,11 @@ export const transactionSlice = createSlice({
             const index = state.products.findIndex(
                 (prod) => prod.id == action.payload.id
             );
-            if(index != -1) {
+            if (index != -1) {
                 state.products[index].qty++;
                 state.total += state.products[index].price;
-                return 
-            } 
+                return;
+            }
             state.products = [
                 ...state.products,
                 { ...action.payload, qty: 1, subtotal: action.payload.price },
@@ -52,12 +54,16 @@ export const transactionSlice = createSlice({
                 (prod) => prod.id == action.payload
             );
             // jika sudah tinggal 1 maka jangan di kurangi
-            if(state.products[index].qty == 1) return 
+            if (state.products[index].qty == 1) return;
             state.products[index].qty--;
             state.total -= state.products[index].price;
         },
-        reset: () => {
-            state = initialState;
+        reset: (state) => {
+            return initialState;
+        },
+        setPay: (state, action) => {
+            state.pay = action.payload;
+            state.change = state.pay - state.total;
         },
     },
 });
@@ -70,6 +76,7 @@ export const {
     incrementQty,
     reset,
     setTableName,
+    setPay,
 } = transactionSlice.actions;
 
 export default transactionSlice.reducer;

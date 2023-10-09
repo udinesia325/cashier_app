@@ -5,6 +5,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\TypeController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -61,14 +62,20 @@ Route::middleware('auth')->prefix("admin")->group(function () {
         Route::delete("/category/delete", [CategoryController::class, "delete"])->name("category.delete");
         Route::post("/category/update/{id}", [CategoryController::class, "update"])
             ->name("category.update")->where('id', '[0-9]+');
-            
-            
-            // type routes
-            Route::post("/type/store", [TypeController::class, "store"])->name("type.store");
-            Route::delete("/type/delete", [TypeController::class, "delete"])->name("type.delete");
-            Route::post("/type/update/{id}", [TypeController::class, "update"])
-                ->name("type.update")->where('id', '[0-9]+');
+
+        // type routes
+        Route::post("/type/store", [TypeController::class, "store"])->name("type.store");
+        Route::delete("/type/delete", [TypeController::class, "delete"])->name("type.delete");
+        Route::post("/type/update/{id}", [TypeController::class, "update"])
+            ->name("type.update")->where('id', '[0-9]+');
     });
 });
+Route::middleware('auth')->group(function () {
+    Route::middleware("role:staff")->group(function () {
+        // transaction controller
+        Route::post("/transaction", [TransactionController::class, "store"])->name("transaction.store");
+    });
+});
+
 
 require __DIR__ . '/auth.php';

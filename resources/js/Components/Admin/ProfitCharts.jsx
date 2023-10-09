@@ -4,7 +4,7 @@ import {
     TableCell,
     TableHead,
     TableHeader,
-    TableRow
+    TableRow,
 } from "@/shadcn/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shadcn/ui/tabs";
 import React, { useState } from "react";
@@ -17,7 +17,8 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/shadcn/ui/popover";
 import { CalendarIcon } from "lucide-react";
 
 function ProfitCharts() {
-    const [date, setDate] = React.useState();
+    const [date, setDate] = useState();
+    const [activeChart, setActiveChart] = useState("bulanan");
     const [options, setOptions] = useState({
         options: {
             chart: {
@@ -63,38 +64,55 @@ function ProfitCharts() {
             <div className="flex justify-between">
                 <Tabs defaultValue="bulanan" className="w-full basis-8/12">
                     <TabsList>
-                        <TabsTrigger value="bulanan">Bulanan</TabsTrigger>
-                        <TabsTrigger value="mingguan">Mingguan</TabsTrigger>
+                        <TabsTrigger
+                            value="bulanan"
+                            onClick={() => setActiveChart("bulanan")}
+                        >
+                            Bulanan
+                        </TabsTrigger>
+                        <TabsTrigger
+                            value="mingguan"
+                            onClick={() => setActiveChart("mingguan")}
+                        >
+                            Mingguan
+                        </TabsTrigger>
                     </TabsList>
-                        <Popover>
-                            <PopoverTrigger asChild>
-                                <Button
-                                    variant={"outline"}
-                                    className={cn(
-                                        "w-[240px] justify-start text-left font-normal ml-8 self-center border-primary translate-y-[2px]",
-                                        !date && "text-muted-foreground"
-                                    )}
-                                >
-                                    <CalendarIcon className="mr-2 h-4 w-4" />
-                                    {date ? (
-                                     new Date(date).toLocaleDateString("id",{day:"2-digit",month:"short","year":"numeric"})
-                                    ) : (
-                                        <span>{new Date().toLocaleDateString("id",{day:"2-digit",month:"short","year":"numeric"})}</span>
-                                    )}
-                                </Button>
-                            </PopoverTrigger>
-                            <PopoverContent
-                                className="w-auto p-0"
-                                align="start"
+                    <Popover>
+                        <PopoverTrigger asChild>
+                            <Button
+                                variant={"outline"}
+                                className={cn(
+                                    "w-[240px] justify-start text-left font-normal ml-8 self-center border-primary translate-y-[2px]",
+                                    !date && "text-muted-foreground"
+                                )}
                             >
-                                <Calendar
-                                    mode="single"
-                                    selected={date}
-                                    onSelect={setDate}
-                                    initialFocus
-                                />
-                            </PopoverContent>
-                        </Popover>
+                                <CalendarIcon className="mr-2 h-4 w-4" />
+                                {date ? (
+                                    new Date(date).toLocaleDateString("id", {
+                                        day: "2-digit",
+                                        month: "short",
+                                        year: "numeric",
+                                    })
+                                ) : (
+                                    <span>
+                                        {new Date().toLocaleDateString("id", {
+                                            day: "2-digit",
+                                            month: "short",
+                                            year: "numeric",
+                                        })}
+                                    </span>
+                                )}
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                                mode="single"
+                                selected={date}
+                                onSelect={setDate}
+                                initialFocus
+                            />
+                        </PopoverContent>
+                    </Popover>
                     <TabsContent value="bulanan">
                         <Chart
                             options={options.options}

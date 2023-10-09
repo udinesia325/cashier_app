@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -22,3 +23,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get("/products", [ProductController::class, "indexApi"])->name("api.products");
 Route::get("/category", [CategoryController::class, "indexApi"])->name("api.category");
+
+Route::get("/dashboard/admin/monthly", [DashboardController::class, "monthly"])->name("dashboard.admin.monthly");
+Route::get("/dashboard/admin/monthlychart", [DashboardController::class, "monthlyChart"])->name("dashboard.admin.monthlychart");
