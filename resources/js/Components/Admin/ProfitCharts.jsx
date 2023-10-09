@@ -76,7 +76,7 @@ function ProfitCharts() {
 
     return (
         <div className="mt-10">
-            <h1 className="text-3xl text-gray-800 font-semibold mb-8">
+            <h1 className="text-3xl text-gray-800 font-semibold mb-2">
                 Profit{" "}
             </h1>
             <div className="flex justify-between">
