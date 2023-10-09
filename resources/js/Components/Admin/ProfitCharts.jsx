@@ -6,20 +6,25 @@ import {
     TableHeader,
     TableRow,
 } from "@/shadcn/ui/table";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shadcn/ui/tabs";
-import React, { useState } from "react";
+import { useState } from "react";
 import Chart from "react-apexcharts";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/shadcn/ui/button";
 import { Calendar } from "@/shadcn/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shadcn/ui/popover";
+import axios from "axios";
 import { CalendarIcon } from "lucide-react";
+import { useEffect } from "react";
 
 function ProfitCharts() {
-    const [date, setDate] = useState();
-    const [activeChart, setActiveChart] = useState("bulanan");
-    const [options, setOptions] = useState({
+    const [date, setDate] = useState(new Date());
+    const [series, setSeries] = useState({
+        name: "Rp.",
+        data: [0, 0, 0, 0, 0],
+    });
+    const [terlaris, setTerlaris] = useState([]);
+    const options = {
         options: {
             chart: {
                 id: "basic-bar",
@@ -29,54 +34,53 @@ function ProfitCharts() {
             },
             xaxis: {
                 categories: [
-                    1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
+                    "minggu 1",
+                    "minggu 2",
+                    "minggu 3",
+                    "minggu 4",
+                    "minggu 5",
                 ],
             },
             // samakan dengan warna default tailwind config
             colors: ["#00ADB5"],
         },
-        series: [
-            {
-                name: "series-1",
-                data: [30, 40, 45, 50, 49, 60, 70, 91],
-            },
-        ],
-    });
-    const products = [
-        {
-            product: "Soto Ayam",
-            total: 90000,
-        },
-        {
-            product: "Bakso Urat",
-            total: 80000,
-        },
-        {
-            product: "Kopi americano",
-            total: 30000,
-        },
-    ];
+        series: [series],
+    };
+    useEffect(() => {
+        let formattedDate = `${date.getDate()}-${
+            date.getMonth() + 1
+        }-${date.getFullYear()}`;
+        axios
+            .get(
+                route("dashboard.admin.monthlychart", {
+                    date: date && formattedDate,
+                })
+            )
+            .then((response) => {
+                let result = [0, 0, 0, 0, 0];
+                response.data.data.forEach((data) => {
+                    result[data.week - 1] = data.total_sales;
+                });
+                setSeries({ ...series, data: result });
+            });
+        axios
+            .get(
+                route("dashboard.admin.productTerlaris", {
+                    date: date && formattedDate,
+                })
+            )
+            .then((response) => {
+                setTerlaris(response.data.data);
+            });
+    }, [date]);
+
     return (
         <div className="mt-10">
             <h1 className="text-3xl text-gray-800 font-semibold mb-8">
                 Profit{" "}
             </h1>
             <div className="flex justify-between">
-                <Tabs defaultValue="bulanan" className="w-full basis-8/12">
-                    <TabsList>
-                        <TabsTrigger
-                            value="bulanan"
-                            onClick={() => setActiveChart("bulanan")}
-                        >
-                            Bulanan
-                        </TabsTrigger>
-                        <TabsTrigger
-                            value="mingguan"
-                            onClick={() => setActiveChart("mingguan")}
-                        >
-                            Mingguan
-                        </TabsTrigger>
-                    </TabsList>
+                <div className="flex-1">
                     <Popover>
                         <PopoverTrigger asChild>
                             <Button
@@ -113,40 +117,32 @@ function ProfitCharts() {
                             />
                         </PopoverContent>
                     </Popover>
-                    <TabsContent value="bulanan">
-                        <Chart
-                            options={options.options}
-                            series={options.series}
-                            type="line"
-                            width="100%"
-                            height="300px"
-                        />
-                    </TabsContent>
-                    <TabsContent value="mingguan">
-                        <Chart
-                            options={options.options}
-                            series={options.series}
-                            type="line"
-                            width="100%"
-                            height="300px"
-                        />
-                    </TabsContent>
-                </Tabs>
-                <div className="basis-4/12">
+                    <Chart
+                        options={options.options}
+                        series={options.series}
+                        type="line"
+                        width="100%"
+                        height="300px"
+                    />
+                </div>
+
+                <div className="basis-1/3">
                     <h1 className="text-xl mb-4">Top 3 Produk Terlaris</h1>
                     <Table className="w-full">
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Nama</TableHead>
+                                <TableHead>Qty</TableHead>
                                 <TableHead>Total</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {products.map((product) => (
-                                <TableRow key={product.product}>
+                            {terlaris.map((product, index) => (
+                                <TableRow key={index}>
                                     <TableCell className="font-medium">
-                                        {product.product}
+                                        {product.nama_barang}
                                     </TableCell>
+                                    <TableCell>{product.terjual}</TableCell>
                                     <TableCell>
                                         {product.total.toLocaleString("id")}
                                     </TableCell>

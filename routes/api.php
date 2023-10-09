@@ -26,3 +26,4 @@ Route::get("/category", [CategoryController::class, "indexApi"])->name("api.cate
 
 Route::get("/dashboard/admin/monthly", [DashboardController::class, "monthly"])->name("dashboard.admin.monthly");
 Route::get("/dashboard/admin/monthlychart", [DashboardController::class, "monthlyChart"])->name("dashboard.admin.monthlychart");
+Route::get("/dashboard/admin/product_terlaris", [DashboardController::class, "productTerlaris"])->name("dashboard.admin.productTerlaris");

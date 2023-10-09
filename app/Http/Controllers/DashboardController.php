@@ -85,4 +85,22 @@ class DashboardController extends Controller
             "data" => $result,
         ]);
     }
+    function productTerlaris(Request $request)
+    {
+        $date = $request->date("date") ?? now();
+
+        $data = DB::table("order_items")
+            ->select(
+                DB::raw("SUM(subtotal*quantity) as total"),
+                DB::raw("products.name as nama_barang"),
+                DB::raw("SUM(quantity) as terjual"),
+            )
+            ->join("products", "products.id", "=", "order_items.product_id")
+            ->where(DB::raw("month(order_items.created_at)"), $date->month)
+            ->groupBy("order_items.product_id", "products.name")
+            ->orderByDesc("terjual")
+            ->limit(3)
+            ->get();
+        return response()->json(compact("data"));
+    }
 }
