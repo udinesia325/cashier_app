@@ -7,9 +7,10 @@ import { Button } from "@/shadcn/ui/button";
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/shadcn/ui/calendar";
 import { CalendarIcon } from "lucide-react";
+import moment from "moment"
 
 function MonthlyCard() {
-    const [data, setData] = useState();
+    const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [date, setDate] = React.useState(new Date());
     const controller = new AbortController();
@@ -18,11 +19,7 @@ function MonthlyCard() {
         axios
             .get(
                 route("dashboard.admin.monthly", {
-                    date:
-                        date &&
-                        `${date?.getDate()}-${
-                            date?.getMonth() + 1
-                        }-${date?.getFullYear()}`,
+                    date:moment(date).format("DD-M-YYYY"),
                 }),
                 { signal: controller.signal }
             )

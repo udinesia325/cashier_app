@@ -16,6 +16,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/shadcn/ui/popover";
 import axios from "axios";
 import { CalendarIcon } from "lucide-react";
 import { useEffect } from "react";
+import moment from "moment"
 
 function ProfitCharts() {
     const [date, setDate] = useState(new Date());
@@ -47,9 +48,7 @@ function ProfitCharts() {
         series: [series],
     };
     useEffect(() => {
-        let formattedDate = `${date.getDate()}-${
-            date.getMonth() + 1
-        }-${date.getFullYear()}`;
+        let formattedDate = moment(date||null).format("DD-M-YYYY");
         axios
             .get(
                 route("dashboard.admin.monthlychart", {
@@ -127,7 +126,7 @@ function ProfitCharts() {
                 </div>
 
                 <div className="basis-1/3">
-                    <h1 className="text-xl mb-4">Top 3 Produk Terlaris</h1>
+                    <h1 className="text-xl mb-4">Top 3 Produk Terlaris {moment(date).format("MMM")}</h1>
                     <Table className="w-full">
                         <TableHeader>
                             <TableRow>

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\UserController;
+use App\Http\Controllers\BookepingController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
@@ -68,6 +69,9 @@ Route::middleware('auth')->prefix("admin")->group(function () {
         Route::delete("/type/delete", [TypeController::class, "delete"])->name("type.delete");
         Route::post("/type/update/{id}", [TypeController::class, "update"])
             ->name("type.update")->where('id', '[0-9]+');
+
+        // bookeping
+        Route::get("/bookeping", [BookepingController::class, "index"])->name("bookeping");
     });
 });
 Route::middleware('auth')->group(function () {

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BookepingController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
@@ -27,3 +28,6 @@ Route::get("/category", [CategoryController::class, "indexApi"])->name("api.cate
 Route::get("/dashboard/admin/monthly", [DashboardController::class, "monthly"])->name("dashboard.admin.monthly");
 Route::get("/dashboard/admin/monthlychart", [DashboardController::class, "monthlyChart"])->name("dashboard.admin.monthlychart");
 Route::get("/dashboard/admin/product_terlaris", [DashboardController::class, "productTerlaris"])->name("dashboard.admin.productTerlaris");
+
+// bookeping
+Route::get("/bookeping",[BookepingController::class,"get"])->name("api.bookeping");
