@@ -126,7 +126,7 @@ function ProfitCharts() {
                 </div>
 
                 <div className="basis-1/3">
-                    <h1 className="text-xl mb-4">Top 3 Produk Terlaris {moment(date).format("MMM")}</h1>
+                    <h1 className="text-xl mb-4">Top 3 Produk Terlaris {new Date(date).toLocaleDateString('id',{month:"short"})}</h1>
                     <Table className="w-full">
                         <TableHeader>
                             <TableRow>

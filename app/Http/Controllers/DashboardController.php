@@ -91,7 +91,7 @@ class DashboardController extends Controller
 
         $data = DB::table("order_items")
             ->select(
-                DB::raw("SUM(subtotal*quantity) as total"),
+                DB::raw("SUM(products.price*quantity) as total"),
                 DB::raw("products.name as nama_barang"),
                 DB::raw("SUM(quantity) as terjual"),
             )
