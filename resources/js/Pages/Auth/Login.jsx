@@ -30,16 +30,17 @@ export default function Login({ status, canResetPassword }) {
         <div className="w-screen h-screen flex bg-primary/10">
             <Head title="Log in" />
 
-            {status && (
-                <div className="mb-4 font-medium text-sm text-green-600">
-                    {status}
-                </div>
-            )}
+           
             <form
                 onSubmit={submit}
                 className="m-auto w-[350px] bg-white p-8 rounded-md transition-all"
             >
                 <h1 className="text-3xl text-center font-semibold">Masuk</h1>
+                {status && (
+                <div className="mb-4 font-medium text-sm text-green-600 text-center">
+                    {status}
+                </div>
+            )}
                 <div>
                     <InputLabel htmlFor="email" value="Email" />
 

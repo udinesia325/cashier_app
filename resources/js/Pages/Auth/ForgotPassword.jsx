@@ -19,12 +19,6 @@ export default function ForgotPassword({ status }) {
         <div className="w-screen h-screen bg-primary/10 flex">
             <Head title="Forgot Password" />
 
-            {status && (
-                <div className="mb-4 font-medium text-sm text-green-600">
-                    {status}
-                </div>
-            )}
-
             <form
                 onSubmit={submit}
                 className="w-[350px] m-auto bg-white p-5 rounded-md"
@@ -33,6 +27,11 @@ export default function ForgotPassword({ status }) {
                     Lupa kata sandi Anda? Masukkan email anda dan kami akan
                     mengirimkan link untuk merubah sandi baru
                 </div>
+                {status && (
+                    <div className="mb-4 font-medium text-sm text-green-600">
+                        {status}
+                    </div>
+                )}
                 <TextInput
                     id="email"
                     type="email"
