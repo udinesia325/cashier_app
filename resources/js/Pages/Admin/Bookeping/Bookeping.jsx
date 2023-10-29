@@ -3,7 +3,16 @@ import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { cn } from "@/lib/utils";
 import { Button } from "@/shadcn/ui/button";
 import { Calendar } from "@/shadcn/ui/calendar";
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "@/shadcn/ui/dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shadcn/ui/popover";
+import { ScrollArea } from "@/shadcn/ui/scroll-area";
 import {
     Select,
     SelectContent,
@@ -12,6 +21,14 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/shadcn/ui/select";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/shadcn/ui/table";
 import {
     getCoreRowModel,
     getPaginationRowModel,
@@ -22,43 +39,17 @@ import axios from "axios";
 import { CalendarIcon } from "lucide-react";
 import moment from "moment";
 import React, { useEffect, useMemo, useState } from "react";
-import { ArrowUpDown } from "lucide-react";
 import { AiFillEye } from "react-icons/ai";
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-} from "@/shadcn/ui/alert-dialog";
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from "@/shadcn/ui/dialog";
-import {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/shadcn/ui/table";
+import exportProperties from "./exportProperties";
+import { SiMicrosoftexcel } from "react-icons/si";
+import * as XLSX from "xlsx";
 
 function Bookeping({ auth, user }) {
     const [selectedUser, setSelectedUser] = useState(user[0]?.id || 0);
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [data, setData] = useState([]);
+    const [exportData, setExportData] = useState([]);
 
     const [details, setDetails] = useState([]);
     const [openDialog, setOpenDialog] = useState(false);
@@ -84,6 +75,7 @@ function Bookeping({ auth, user }) {
             );
             const { data } = response.data;
             setData(data);
+            exportProperties(data, setExportData);
         } catch (e) {
             console.log(e);
         }
@@ -105,11 +97,11 @@ function Bookeping({ auth, user }) {
             },
         },
         {
-            accessorKey: "pay",
+            accessorKey: "total",
             header: "Total Pembayaran",
             cell: ({ row }) => {
                 return (
-                    "Rp. " + Number(row.getValue("pay")).toLocaleString("id")
+                    "Rp. " + Number(row.getValue("total")).toLocaleString("id")
                 );
             },
         },
@@ -152,7 +144,18 @@ function Bookeping({ auth, user }) {
             sorting,
         },
     });
-    console.log(data);
+    const handleExport = () => {
+        const selectedUserName = user[user.findIndex( user => user.id == selectedUser)].name
+        const wb = XLSX.utils.book_new();
+        const ws = XLSX.utils.json_to_sheet(exportData);
+        XLSX.utils.book_append_sheet(wb, ws, "Bookeping");
+        XLSX.writeFile(
+            wb,
+            `Bookeping-${selectedUserName}-${moment().format(
+                "DD-MM-YYYY hh:mm:ss"
+            )}.xlsx`
+        );
+    };
     return (
         <Authenticated user={auth.user}>
             <h1 className="text-2xl font-semibold">Pembukuan</h1>
@@ -239,38 +242,38 @@ function Bookeping({ auth, user }) {
                     <DialogHeader>
                         <DialogTitle>Detail Pesanan</DialogTitle>
                     </DialogHeader>
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead className="w-[100px]">
-                                        Nama
-                                    </TableHead>
-                                    <TableHead>Qty</TableHead>
-                                    <TableHead>Harga</TableHead>
-                                    <TableHead>Total</TableHead>
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead className="w-[100px]">
+                                    Nama
+                                </TableHead>
+                                <TableHead>Qty</TableHead>
+                                <TableHead>Harga</TableHead>
+                                <TableHead>Total</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {details.map((detail) => (
+                                <TableRow key={detail.id}>
+                                    <TableCell className="font-medium">
+                                        {detail.product[0].name}
+                                    </TableCell>
+                                    <TableCell>{detail.quantity}</TableCell>
+                                    <TableCell>
+                                        {Number(
+                                            detail.product[0].price
+                                        ).toLocaleString("id")}
+                                    </TableCell>
+                                    <TableCell className="text-right">
+                                        {Number(detail.subtotal).toLocaleString(
+                                            "id"
+                                        )}
+                                    </TableCell>
                                 </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {details.map((detail) => (
-                                    <TableRow key={detail.id}>
-                                        <TableCell className="font-medium">
-                                            {detail.product[0].name}
-                                        </TableCell>
-                                        <TableCell>{detail.quantity}</TableCell>
-                                        <TableCell>
-                                            {Number(
-                                                detail.product[0].price
-                                            ).toLocaleString("id")}
-                                        </TableCell>
-                                        <TableCell className="text-right">
-                                            {Number(
-                                                detail.subtotal
-                                            ).toLocaleString("id")}
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
+                            ))}
+                        </TableBody>
+                    </Table>
                     <DialogFooter>
                         <DialogClose asChild>
                             <Button type="button">Tutup</Button>
@@ -279,7 +282,39 @@ function Bookeping({ auth, user }) {
                 </DialogContent>
             </Dialog>
             {/* End Dialog box */}
-            <DataTable table={table} columns={columns} />
+
+            <ScrollArea className="h-[400px]">
+                <DataTable table={table} columns={columns} />
+            </ScrollArea>
+            <div className="flex items-center justify-start space-x-2 py-4">
+                <Button
+                    variant="primary"
+                    size="sm"
+                    className="bg-primary text-white cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed"
+                    onClick={() => table.previousPage()}
+                    disabled={!table.getCanPreviousPage()}
+                >
+                    Sebelumnya
+                </Button>
+                <Button
+                    variant="primary"
+                    size="sm"
+                    className="bg-primary text-white cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed"
+                    onClick={() => table.nextPage()}
+                    disabled={!table.getCanNextPage()}
+                >
+                    Berikutnya
+                </Button>
+                <Button
+                    variant="primary"
+                    size="sm"
+                    className="bg-green-500 text-white my-3 hover:bg-green-400"
+                    onClick={handleExport}
+                >
+                    <SiMicrosoftexcel className="mr-2" />
+                    Export
+                </Button>
+            </div>
         </Authenticated>
     );
 }

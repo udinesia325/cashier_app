@@ -58,7 +58,7 @@ function Transaksi() {
             });
             return;
         }
-        if(change <= 0){
+        if(change < 0){
             toast({
                 description: "Uang pembayaran tidak cukup",
             });
@@ -213,7 +213,7 @@ function Transaksi() {
                         <h1
                             className={cn(
                                 "my-3 font-semibold",
-                                change <= 0 ? "text-red-400" : ""
+                                change < 0 ? "text-red-400" : ""
                             )}
                         >
                             Kembali : Rp.{change.toLocaleString("id")}
@@ -226,7 +226,7 @@ function Transaksi() {
                         <AlertDialogAction
                             onClick={handlePost}
                             className={
-                                products.length == 0 || change <=0
+                                products.length == 0 || change <0
                                     ? "bg-primary/50 hover:bg-primary/50"
                                     : ""
                             }

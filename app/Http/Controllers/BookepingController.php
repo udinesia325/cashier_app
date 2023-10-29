@@ -30,7 +30,7 @@ class BookepingController extends Controller
         $startDate = $request->date("startDate") ?? now();
         $endDate = $request->date("endDate") ?? now();
         $userId = $request->input("userId");
-        $data = Order::with("orderItem","orderItem.product:id,name,price,image")
+        $data = Order::with("orderItem", "orderItem.product:id,name,price,image")
             ->has("user")
             ->whereHas("user", function (Builder $builder) use ($userId) {
                 $builder->where('id', $userId);
@@ -39,8 +39,8 @@ class BookepingController extends Controller
             ->get()
             ->map(function ($d) {
                 $d["total"] = 0;
-                foreach($d->orderItem as $item){
-                    $d["total"] += ($item['quantity'] * $item['subtotal']);
+                foreach ($d->orderItem as $item) {
+                    $d["total"] += $item['subtotal'];
                 }
                 return $d;
             })->toArray();
