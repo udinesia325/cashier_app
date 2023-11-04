@@ -1,10 +1,40 @@
-import React from "react";
-import Dropdown from "./Dropdown";
 import { Input } from "@/shadcn/ui/input";
-import { Link } from "@inertiajs/react";
+import { Link, router } from "@inertiajs/react";
 import { FiPower } from "react-icons/fi";
-import Logo from "../../assets/Logo.jpg"
+import Logo from "../../assets/Logo.jpg";
+import { useContext } from "react";
+import { ActiveSidebarContext, SearchContext } from "@/Layouts/AuthenticatedLayout";
+import React from "react";
+import { useState } from "react";
+import { useDebounce } from "@/hooks/useDebounce";
+import { useEffect } from "react";
+
 function Navbar({ user }) {
+    const [input,setInput] = useState('')
+    const { search, setSearch } = useContext(SearchContext);
+    const {activeMenu} = useContext(ActiveSidebarContext)
+    const debounced = useDebounce(input,300)
+
+    const handleInputChange = (event) => {
+        setInput(event.target.value)
+       
+    };
+    useEffect(() => {
+      if(debounced){
+        setSearch(debounced)
+        router.get(
+            `/dashboard`,
+            {
+                category:activeMenu,
+                search:search,
+            },
+            {
+                preserveState: true,
+            }
+        );
+      }
+    }, [debounced])
+    
     return (
         <nav className="col-span-3 flex justify-between items-center border-b px-3">
             {/* Brand Name */}
@@ -18,6 +48,8 @@ function Navbar({ user }) {
                 type="text"
                 placeholder="Cari ..."
                 className="max-w-[300px]"
+                value={input}
+                onChange={handleInputChange}
             />
             <Link
                 href={route("logout")}
@@ -32,4 +64,4 @@ function Navbar({ user }) {
     );
 }
 
-export default Navbar;
+export default React.memo(Navbar);

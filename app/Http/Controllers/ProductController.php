@@ -127,13 +127,14 @@ class ProductController extends Controller
     {
         $page = $request->input("page") ?? $this->page;
         $search = $request->input("search") ?? $this->search;
+        $category = $request->input("category") ?? "";
         $perPage = $request->input("perPage") ?? $this->perPage;
         $products = Product::query()
             ->has("category.type")
-            ->whereHas("category", function (Builder $builder) use ($search) {
-                $builder->where('name', 'like', "%$search%");
+            ->whereHas("category", function (Builder $builder) use ($category) {
+                $builder->where('name', 'like', "%$category%");
             })
-            ->orWhere('name', 'like', "%$search%")
+            ->where('name', 'like', "%$search%")
             ->latest();
 
         $data = new ProductCollection($products->paginate(perPage: $perPage, page: $page));

@@ -3,6 +3,7 @@ import SidebarAdmin from "@/Components/Admin/Sidebar";
 import Navbar from "@/Components/Navbar";
 import Sidebar from "@/Components/Sidebar";
 import Transaksi from "@/Components/Staff/Transaksi";
+import { params } from "@/lib/utils";
 import { Toaster } from "@/shadcn/ui/toaster";
 import { useToast } from "@/shadcn/ui/use-toast";
 import { useState } from "react";
@@ -11,6 +12,7 @@ import { useEffect } from "react";
 
 
 export const ActiveSidebarContext = createContext(null)
+export const SearchContext = createContext(null)
 
 export default function Authenticated({
     user,
@@ -43,15 +45,27 @@ export default function Authenticated({
 
     //  halaman staff 
     const [activeMenu, setActiveMenu] = useState("")
+    const [search,setSearch] = useState("")
+    const category = params().get("category")
+    useEffect(()=>{
+        if(category){
+            setActiveMenu(category)
+        }
+    },[])
+
 
     return (
         <div className="w-full h-screen grid grid-cols-[250px_1fr_1fr_350px] grid-rows-[80px_1fr]">
-            <ActiveSidebarContext.Provider value={{ activeMenu,setActiveMenu }}>
-            <Navbar user={user} />
-            <Transaksi />
-            <Sidebar />
-            <div className="col-span-2 bg-gray-200">{children}</div>
-            <Toaster />
+            <ActiveSidebarContext.Provider
+                value={{ activeMenu, setActiveMenu }}
+            >
+                <SearchContext.Provider value={{ search, setSearch }}>
+                    <Navbar user={user} />
+                    <Transaksi />
+                    <Sidebar />
+                    <div className="col-span-2 bg-gray-200">{children}</div>
+                    <Toaster />
+                </SearchContext.Provider>
             </ActiveSidebarContext.Provider>
         </div>
     );

@@ -1,12 +1,14 @@
-import { ActiveSidebarContext } from "@/Layouts/AuthenticatedLayout";
+import { ActiveSidebarContext, SearchContext } from "@/Layouts/AuthenticatedLayout";
 import { addProduct } from "@/features/transaction/transactionSlice";
+import { params } from "@/lib/utils";
 import { useGetProductsQuery } from "@/services/productApi";
 import { ScrollArea } from "@/shadcn/ui/scroll-area";
 import { useContext } from "react";
 import { useDispatch } from "react-redux";
 function Products() {
     const { activeMenu } = useContext(ActiveSidebarContext);
-    const { data: products, isLoading } = useGetProductsQuery(activeMenu);
+    const { search } = useContext(SearchContext);
+    const { data: products, isLoading } = useGetProductsQuery({category:activeMenu,search});
     const dispatch = useDispatch()
     if (isLoading) {
         return <p>Memuat ...</p>;

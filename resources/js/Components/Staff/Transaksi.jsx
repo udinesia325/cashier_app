@@ -22,6 +22,7 @@ import { Input } from "@/shadcn/ui/input";
 import { useToast } from "@/shadcn/ui/use-toast";
 import { useForm } from "@inertiajs/react";
 import { Label } from "@radix-ui/react-dropdown-menu";
+import React from "react";
 import { useRef } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -96,7 +97,7 @@ function Transaksi() {
                 {products?.map((product, index) => (
                     <div
                         key={index}
-                        className="w-full grid grid-cols-[70px_1fr_60px] items-center p-1 pr-3 border border-primary rounded relative"
+                        className="w-full grid grid-cols-[70px_1fr_60px] items-center p-1 pr-3 border border-primary rounded relative transition-all hover:border-primary/70 hover:bg-gray-100"
                     >
                         {/* clode button */}
                         <IoCloseSharp
@@ -110,7 +111,7 @@ function Transaksi() {
                             className="aspect-square max-h-full"
                         />
                         <div className="pl-2 flex flex-col gap-0">
-                            <p className="w-[100px] leading-tight font-semibold text-lg text-slate-700 truncate">
+                            <p className="w-full leading-tight font-semibold text-lg text-slate-700 truncate">
                                 {product.name}
                             </p>
                             <span className="leading-tight text-sm text-gray-500">
@@ -240,7 +241,7 @@ function Transaksi() {
     );
 }
 
-export default Transaksi;
+export default React.memo(Transaksi);
 
 function DialogTableName() {
     const inputRef = useRef(null);
