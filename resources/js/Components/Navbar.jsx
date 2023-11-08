@@ -3,37 +3,38 @@ import { Link, router } from "@inertiajs/react";
 import { FiPower } from "react-icons/fi";
 import Logo from "../../assets/Logo.jpg";
 import { useContext } from "react";
-import { ActiveSidebarContext, SearchContext } from "@/Layouts/AuthenticatedLayout";
 import React from "react";
 import { useState } from "react";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useEffect } from "react";
+import { SearchContext } from "@/contexts/SearchProvider";
+import { ActiveMenuContext } from "@/contexts/ActiveMenuProvider";
+import { params } from "@/lib/utils";
 
 function Navbar({ user }) {
-    const [input,setInput] = useState('')
+    const [input,setInput] = useState(params().get('search')|| '')
     const { search, setSearch } = useContext(SearchContext);
-    const {activeMenu} = useContext(ActiveSidebarContext)
+    const {activeMenu} = useContext(ActiveMenuContext)
     const debounced = useDebounce(input,300)
 
     const handleInputChange = (event) => {
         setInput(event.target.value)
-       
     };
     useEffect(() => {
-      if(debounced){
-        setSearch(debounced)
-        router.get(
-            `/dashboard`,
-            {
-                category:activeMenu,
-                search:search,
-            },
-            {
-                preserveState: true,
-            }
-        );
-      }
-    }, [debounced])
+        if (debounced != search) {
+            setSearch(debounced);
+            router.get(
+                `/dashboard`,
+                {
+                    category: activeMenu,
+                    search: debounced,
+                },
+                {
+                    preserveState: true,
+                }
+            );
+        }
+    }, [debounced]);
     
     return (
         <nav className="col-span-3 flex justify-between items-center border-b px-3">

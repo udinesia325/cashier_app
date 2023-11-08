@@ -1,21 +1,62 @@
-import { ActiveSidebarContext, SearchContext } from "@/Layouts/AuthenticatedLayout";
+import { ActiveMenuContext } from "@/contexts/ActiveMenuProvider";
+import { ProductPageContext } from "@/contexts/ProductPageProvider";
+import { SearchContext } from "@/contexts/SearchProvider";
 import { addProduct } from "@/features/transaction/transactionSlice";
-import { params } from "@/lib/utils";
 import { useGetProductsQuery } from "@/services/productApi";
 import { ScrollArea } from "@/shadcn/ui/scroll-area";
-import { useContext } from "react";
+import { router } from "@inertiajs/react";
+import { useContext, useEffect } from "react";
+import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import { useDispatch } from "react-redux";
+
 function Products() {
-    const { activeMenu } = useContext(ActiveSidebarContext);
+    const { activeMenu } = useContext(ActiveMenuContext);
     const { search } = useContext(SearchContext);
-    const { data: products, isLoading } = useGetProductsQuery({category:activeMenu,search});
-    const dispatch = useDispatch()
+    const { page, setPage } = useContext(ProductPageContext);
+    const { data: products, isLoading } = useGetProductsQuery({
+        category: activeMenu,
+        search,
+        page,
+    });
+    const { current_page = 1, last_page = 1 } = products?.meta || {};
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        router.get("/dashboard",{
+            category:activeMenu,
+            search,
+            page
+        },{
+            preserveState:true
+        })
+    },[activeMenu,search,page])
+
+    useEffect(() => {
+        setPage(current_page || 1);
+    }, [products]);
+
     if (isLoading) {
         return <p>Memuat ...</p>;
     }
     if (products.data.length == 0) {
-        return <p className="mt-10 text-center text-gray-500">Tidak ada menu...</p>;
+        return (
+            <p className="mt-10 text-center text-gray-500">Tidak ada menu...</p>
+        );
     }
+    // push state
+
+    const handlePrev = () => {
+        if (page == 1) return null;
+        setPage((prev) => prev - 1);
+    };
+
+    const handleNext = () => {
+        if (page == last_page) return null;
+        setPage((prev) => prev + 1);
+    };
+    
+
     return (
         <ScrollArea className="h-[85vh] min-h-[400px]">
             <div className="flex flex-wrap gap-4 mt-5">
@@ -33,10 +74,26 @@ function Products() {
                         <h1 className="text-slate-700 font-bold truncate">
                             {product.name}
                         </h1>
-                        <p className="text-sm text-slate-500">Rp. {Number(product.price).toLocaleString('id')}</p>
+                        <p className="text-sm text-slate-500">
+                            Rp. {Number(product.price).toLocaleString("id")}
+                        </p>
                     </div>
                 ))}
             </div>
+            <button
+                className="bg-primary p-3 text-white rounded-full font-bold mt-5 mb-3 mr-4 disabled:bg-primary/50"
+                onClick={handlePrev}
+                disabled={current_page == 1}
+            >
+                <BsChevronLeft />
+            </button>
+            <button
+                className="bg-primary p-3 text-white rounded-full font-bold mt-5 mb-3 disabled:bg-primary/50"
+                onClick={handleNext}
+                disabled={page == last_page}
+            >
+                <BsChevronRight />
+            </button>
         </ScrollArea>
     );
 }

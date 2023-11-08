@@ -1,4 +1,6 @@
-import { ActiveSidebarContext, SearchContext } from "@/Layouts/AuthenticatedLayout";
+import { ActiveMenuContext } from "@/contexts/ActiveMenuProvider";
+import { ProductPageContext } from "@/contexts/ProductPageProvider";
+import { SearchContext } from "@/contexts/SearchProvider";
 import { cn } from "@/lib/utils";
 import { useGetCategoryQuery } from "@/services/categoryApi";
 import { ScrollArea } from "@/shadcn/ui/scroll-area";
@@ -10,15 +12,16 @@ import { useState } from "react";
 
 function Sidebar() {
     const { data: types, isLoading } = useGetCategoryQuery();
-    const { activeMenu, setActiveMenu } = useContext(ActiveSidebarContext);
-    const {setSearch} = useContext(SearchContext)
-    let params = new URL(document.location).searchParams;
-    
+    const { activeMenu, setActiveMenu } = useContext(ActiveMenuContext);
+    const {setSearch} = useContext(SearchContext)  
+    const {setPage} = useContext(ProductPageContext)
+
+
     useEffect(() => {
         
         // jika belum ada menu terpilih maka jadikan kategori teratas sebagai yang aktif
         if (!activeMenu && !isLoading) {
-            setActiveMenu(types.data[0]?.category[0]?.name || "");
+            setActiveMenu(types?.data[0]?.category[0]?.name || "");
         }
     }, [activeMenu,isLoading]);
     if (isLoading) {
@@ -27,6 +30,7 @@ function Sidebar() {
     const handleItemCLick = (name) => {
         setActiveMenu(name);
         setSearch('')
+        setPage(1)
         router.get(`/dashboard`, {
             category: name,
         },
