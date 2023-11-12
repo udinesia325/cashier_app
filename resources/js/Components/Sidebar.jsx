@@ -38,7 +38,7 @@ function Sidebar() {
     }
 
     return (
-        <div className="col-span-1 pt-2">
+        <div className="hidden md:block col-span-1 pt-2">
             <ScrollArea className="h-[95%] w-[100%]">
                 {types.data.map((type, _) => {
                     return (

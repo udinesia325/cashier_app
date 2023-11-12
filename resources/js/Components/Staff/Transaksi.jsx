@@ -77,7 +77,7 @@ function Transaksi() {
         });
     };
     return (
-        <div className="col-span-1 row-span-2 border border-x-0 border-b grid grid-rows-[80px_1fr_100px]">
+        <div className="hidden col-span-1 row-span-2 border border-x-0 border-b md:grid md:grid-rows-[80px_1fr_100px]">
             <div className="row-span-1 border flex justify-between items-center px-1">
                 {/* informasi pesanan */}
                 <div className="w-1/2 grid grid-cols-[30px_1fr] grid-rows-[20px_20px] gap-x-1 gap-y-[0.2em] ">

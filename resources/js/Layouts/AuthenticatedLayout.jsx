@@ -2,6 +2,7 @@ import NavbarAdmin from "@/Components/Admin/Navbar";
 import SidebarAdmin from "@/Components/Admin/Sidebar";
 import Navbar from "@/Components/Navbar";
 import Sidebar from "@/Components/Sidebar";
+import SidebarMobile from "@/Components/Staff/SidebarMobile";
 import Transaksi from "@/Components/Staff/Transaksi";
 import ActiveMenuProvider from "@/contexts/ActiveMenuProvider";
 import ProductPageProvider, {
@@ -10,6 +11,7 @@ import ProductPageProvider, {
 import SearchProvider from "@/contexts/SearchProvider";
 import { Toaster } from "@/shadcn/ui/toaster";
 import { useToast } from "@/shadcn/ui/use-toast";
+import { useState } from "react";
 import { useEffect } from "react";
 
 export default function Authenticated({
@@ -40,16 +42,17 @@ export default function Authenticated({
             </div>
         );
     }
-
+    const [openSidebar,setOpenSidebar] = useState(false)
     return (
-        <div className="w-full h-screen grid grid-cols-[250px_1fr_1fr_350px] grid-rows-[80px_1fr]">
+        <div className="w-full h-screen overflow-hidden md:grid grid-cols-1 grid-rows-[120px_1fr] md:grid-cols-[250px_1fr_1fr_350px] md:grid-rows-[80px_1fr]">
             <ActiveMenuProvider>
                 <SearchProvider>
                     <ProductPageProvider>
-                        <Navbar user={user} />
+                        <Navbar user={user} openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />
                         <Transaksi />
                         <Sidebar />
-                        <div className="col-span-2 bg-gray-200">{children}</div>
+                        <SidebarMobile openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />
+                        <div className="md:col-span-2 bg-gray-200">{children}</div>
                         <Toaster />
                     </ProductPageProvider>
                 </SearchProvider>

@@ -57,12 +57,12 @@ function Products() {
     
 
     return (
-        <ScrollArea className="h-[85vh] min-h-[400px]">
-            <div className="flex flex-wrap gap-4 mt-5">
+        <ScrollArea className="h-[85vh] min-h-[400px] pb-10 md:pb-0">
+            <div className="grid grid-cols-2 gap-2 md:flex md:flex-wrap md:gap-4 mt-5">
                 {products.data?.map((product, index) => (
                     <div
                         key={index}
-                        className="w-[20%] min-w-[165px] basis-1/5 p-2 bg-white rounded-xl cursor-pointer text-center transition-all hover:shadow-md hover:scale-105"
+                        className=" bg-white rounded-xl cursor-pointer text-center transition-all md:w-[20%] md:min-w-[165px] md:basis-1/5 p-2  hover:shadow-md hover:scale-105"
                         onClick={() => dispatch(addProduct(product))}
                     >
                         <img
