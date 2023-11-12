@@ -45,7 +45,6 @@ function Products() {
         );
     }
     // push state
-
     const handlePrev = () => {
         if (page == 1) return null;
         setPage((prev) => prev - 1);
@@ -99,3 +98,4 @@ function Products() {
 }
 
 export default Products;
+

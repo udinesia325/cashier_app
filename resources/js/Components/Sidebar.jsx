@@ -5,10 +5,7 @@ import { cn } from "@/lib/utils";
 import { useGetCategoryQuery } from "@/services/categoryApi";
 import { ScrollArea } from "@/shadcn/ui/scroll-area";
 import { router } from "@inertiajs/react";
-import React from "react";
-import { useEffect } from "react";
-import { useContext } from "react";
-import { useState } from "react";
+import React, { useContext, useEffect } from "react";
 
 function Sidebar() {
     const { data: types, isLoading } = useGetCategoryQuery();
@@ -33,6 +30,7 @@ function Sidebar() {
         setPage(1)
         router.get(`/dashboard`, {
             category: name,
+            search:''
         },
         {
             preserveState:true

@@ -12,7 +12,7 @@ import { ActiveMenuContext } from "@/contexts/ActiveMenuProvider";
 import { params } from "@/lib/utils";
 
 function Navbar({ user }) {
-    const [input,setInput] = useState(params().get('search')|| '')
+    const [input,setInput] = useState('')
     const { search, setSearch } = useContext(SearchContext);
     const {activeMenu} = useContext(ActiveMenuContext)
     const debounced = useDebounce(input,300)
